@@ -8,6 +8,7 @@
       <strong>Description:</strong>
       {{ post.body }}
     </div>
+    <button @click="deletePost">Delete</button>
   </div>
 </template>
 
@@ -17,6 +18,12 @@ export default {
     post: {
       type: Object,
       required: true,
+    }
+  },
+
+  methods: {
+    deletePost(event) {
+      console.log(event.target)
     }
   }
 }

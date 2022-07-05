@@ -2,12 +2,15 @@
   <form @submit.prevent>
     <input v-model="post.title" class="input" type="text" placeholder="Title" />
     <input v-model="post.body" class="input" type="text" placeholder="Description" />
+    <my-button/>
     <button class="btn" @click="createPost">Create</button>
   </form>
 </template>
 
 <script>
+import MyButton from './UI/MyButton.vue';
   export default {
+    components: {MyButton},
     data() {
       return {
         post: {
@@ -41,11 +44,4 @@
     flex-direction: column;
   }
 
-  .btn {
-    align-self: flex-end;
-    margin-top: 15px;
-    padding: 5px 15px;
-    color: teal;
-    background: white;
-  }
 </style>

@@ -1,16 +1,13 @@
 <template>
   <form @submit.prevent>
-    <input v-model="post.title" class="input" type="text" placeholder="Title" />
-    <input v-model="post.body" class="input" type="text" placeholder="Description" />
-    <my-button/>
-    <button class="btn" @click="createPost">Create</button>
+    <my-input v-model="post.title" placeholder="Title" />
+    <my-input v-model="post.body" placeholder="Description" />
+    <my-button @click="createPost">Create</my-button>
   </form>
 </template>
 
 <script>
-import MyButton from './UI/MyButton.vue';
   export default {
-    components: {MyButton},
     data() {
       return {
         post: {
@@ -33,12 +30,6 @@ import MyButton from './UI/MyButton.vue';
 </script>
 
 <style>
-  .input {
-    width: 100%;
-    margin-top: 15px;
-    padding: 8px 15px;
-  }
-
   form {
     display: flex;
     flex-direction: column;

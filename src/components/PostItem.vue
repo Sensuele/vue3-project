@@ -8,7 +8,7 @@
       <strong>Description:</strong>
       {{ post.body }}
     </div>
-    <button @click="deletePost">Delete</button>
+    <my-button @click="deletePost">Delete</my-button>
   </div>
 </template>
 

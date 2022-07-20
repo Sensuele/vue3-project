@@ -8,7 +8,7 @@
       <strong>Description:</strong>
       {{ post.body }}
     </div>
-    <my-button @click="deletePost">Delete</my-button>
+    <my-button @click="$emit('deletePost', post)">Delete</my-button>
   </div>
 </template>
 
@@ -21,11 +21,6 @@ export default {
     }
   },
 
-  methods: {
-    deletePost(event) {
-      console.log(event.target)
-    }
-  }
 }
 </script>
 

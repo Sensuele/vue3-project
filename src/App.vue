@@ -1,9 +1,15 @@
 <template>
   <div class="app">
-      <post-form
-      @create="createPost"/>
+    <my-button @click="showDialog">Create post</my-button>
+      <my-dialog v-model:show="dialogVisible">
+        <post-form
+          @create="createPost"
+        />
+      </my-dialog>
+      
       <post-list
       :posts="posts"
+      @deletePost="deletePost"
       />
   </div>
 </template>
@@ -11,20 +17,31 @@
 <script>
   import PostList from './components/PostList.vue';
   import PostForm from './components/PostForm.vue';
+  import MyDialog from './components/UI/MyDialog.vue';
 
   export default {
-  components: { PostForm, PostList },
+  components: { PostForm, PostList, MyDialog },
     data() {
       return {
         posts: [
           {id: 1, title: 'JavaScript', body: 'Description'}
-        ]
+        ],
+        dialogVisible: false,
       }
     },
 
     methods: {
       createPost(post) {
         this.posts.push(post);
+        this.dialogVisible = false;
+      },
+
+      deletePost(post) {
+        this.posts = this.posts.filter(p => p.id !== post.id)
+      },
+
+      showDialog() {
+        this.dialogVisible = true;
       }
     }
   }

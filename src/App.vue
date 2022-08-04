@@ -3,11 +3,13 @@
     <div class="app__btns">
       <my-button 
         @click="showDialog"
-        style="margin: 15px 0"
       >
           Create post
       </my-button>
-      <my-select></my-select>
+      <my-select
+        v-model="selectedSort"
+        :options="sortOptions"
+      ></my-select>
     </div>
     
       <my-dialog v-model:show="dialogVisible">
@@ -41,6 +43,17 @@
         ],
         dialogVisible: false,
         postLoading: false,
+        selectedSort: '',
+        sortOptions: [
+          {
+            value: 'title', 
+            name: 'By name',
+          },
+          {
+            value: 'body', 
+            name: 'By description',
+          }
+        ]
       }
     },
 
@@ -65,7 +78,7 @@
       async fetchPosts() {
         try {
           this.isPostLoading = true;
-          const res = await axios.get('https://jsonplaceholder.typicode.com/posts?_liml=10');
+          const res = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10');
           this.posts = res.data
         } catch (error) {
           console.log(error)
@@ -73,6 +86,15 @@
           this.isPostLoading = false;
         }
       }
+    },
+
+    watch: {
+      selectedSort(newValue) {
+        this.posts.sort((post1, post2) => {
+          return post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
+        })
+      },
+ 
     }
   }
 
@@ -91,6 +113,7 @@
 
   .app__btns {
     padding: 20px 0;
+    margin: 15px 0;
     display: flex;
     justify-content: space-between;
   }

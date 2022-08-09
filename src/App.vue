@@ -1,5 +1,8 @@
 <template>
   <div class="app">
+    <my-input
+      v-model="searchQuery"
+    />
     <div class="app__btns">
       <my-button 
         @click="showDialog"
@@ -19,7 +22,7 @@
       </my-dialog>
       
       <post-list
-        :posts="posts"
+        :posts="sortedAndSearchedPosts"
         @deletePost="deletePost"
         v-if="!isPostLoading"
       />
@@ -33,9 +36,10 @@
   import MyDialog from './components/UI/MyDialog.vue';
   import MySelect from './components/UI/MySelect.vue';
   import axios from 'axios';
+import MyInput from './components/UI/MyInput.vue';
 
   export default {
-  components: { PostForm, PostList, MyDialog, MySelect },
+  components: { PostForm, PostList, MyDialog, MySelect, MyInput },
     data() {
       return {
         posts: [
@@ -44,6 +48,7 @@
         dialogVisible: false,
         postLoading: false,
         selectedSort: '',
+        searchQuery: '',
         sortOptions: [
           {
             value: 'title', 
@@ -88,13 +93,16 @@
       }
     },
 
-    watch: {
-      selectedSort(newValue) {
-        this.posts.sort((post1, post2) => {
-          return post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
+    computed: {
+      sortedPosts() {
+        return [...this.posts].sort((post1, post2) => {
+           post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
         })
       },
  
+      sortedAndSearchedPosts() {
+        return this.sortedPosts.filter(post => post.title.includes(this.searchQuery))
+      }
     }
   }
 

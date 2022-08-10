@@ -2,7 +2,13 @@
   <div class="app">
     <my-input
       v-model="searchQuery"
+      placeholder="Search..."
     />
+     <my-button 
+        @click="srtPost"
+      >
+          search
+      </my-button>
     <div class="app__btns">
       <my-button 
         @click="showDialog"
@@ -27,6 +33,11 @@
         v-if="!isPostLoading"
       />
       <div v-else>Loading...</div>
+      <div class="page__wrapper">
+        <div class="page" v-for="page in totalPages" :key="page">
+        {{ page }}
+        </div>
+      </div>
   </div>
 </template>
 
@@ -42,13 +53,14 @@ import MyInput from './components/UI/MyInput.vue';
   components: { PostForm, PostList, MyDialog, MySelect, MyInput },
     data() {
       return {
-        posts: [
-          {id: 1, title: 'JavaScript', body: 'Description'}
-        ],
+        posts: [],
         dialogVisible: false,
         postLoading: false,
         selectedSort: '',
         searchQuery: '',
+        page: 1,
+        limit: 10,
+        totalPages: 0,
         sortOptions: [
           {
             value: 'title', 
@@ -83,14 +95,20 @@ import MyInput from './components/UI/MyInput.vue';
       async fetchPosts() {
         try {
           this.isPostLoading = true;
-          const res = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10');
+          const res = await axios.get('https://jsonplaceholder.typicode.com/posts?', {
+            params: {
+              _page: this.page,
+              _limit: this.limit,
+            }
+          });
+          this.totalPages = Math.ceil(res.headers['x-total-count'] / this.limit)
           this.posts = res.data
         } catch (error) {
           console.log(error)
         } finally {
           this.isPostLoading = false;
         }
-      }
+      },
     },
 
     computed: {
@@ -101,7 +119,7 @@ import MyInput from './components/UI/MyInput.vue';
       },
  
       sortedAndSearchedPosts() {
-        return this.sortedPosts.filter(post => post.title.includes(this.searchQuery))
+        return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
       }
     }
   }

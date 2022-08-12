@@ -4,11 +4,6 @@
       v-model="searchQuery"
       placeholder="Search..."
     />
-     <my-button 
-        @click="srtPost"
-      >
-          search
-      </my-button>
     <div class="app__btns">
       <my-button 
         @click="showDialog"
@@ -30,12 +25,20 @@
       <post-list
         :posts="sortedAndSearchedPosts"
         @deletePost="deletePost"
-        v-if="!isPostLoading"
+        v-if="!postLoading"
       />
       <div v-else>Loading...</div>
       <div class="page__wrapper">
-        <div class="page" v-for="page in totalPages" :key="page">
-        {{ page }}
+        <div
+         class="page" 
+         v-for="pageNum in totalPages" 
+         :key="pageNum"
+         :class="{
+          'current-page': page === pageNum
+         }"
+         @click="changePage(pageNum)"
+         >
+        {{ pageNum }}
         </div>
       </div>
   </div>
@@ -92,6 +95,10 @@ import MyInput from './components/UI/MyInput.vue';
         this.dialogVisible = true;
       },
 
+      changePage(pageNum) {
+        this.page = pageNum;
+      },
+
       async fetchPosts() {
         try {
           this.isPostLoading = true;
@@ -121,6 +128,12 @@ import MyInput from './components/UI/MyInput.vue';
       sortedAndSearchedPosts() {
         return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
       }
+    },
+
+    watch: {
+      page() {
+        this.fetchPosts()
+      }
     }
   }
 
@@ -142,6 +155,20 @@ import MyInput from './components/UI/MyInput.vue';
     margin: 15px 0;
     display: flex;
     justify-content: space-between;
+  }
+
+  .page__wrapper {
+    display: flex;
+    margin-top: 15px;
+  }
+
+  .page {
+    border: 1px solid black;
+    padding: 10px;
+  }
+
+  .current-page {
+    border: 2px solid green;
   }
 
 </style>
